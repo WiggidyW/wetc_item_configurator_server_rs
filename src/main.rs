@@ -4,21 +4,23 @@ mod error;
 mod env;
 
 //
+// ENV Variables Required if not using Envoy:
+//     SERVICE_ADDRESS - Address:Port
+//
 // Required ENV Variables:
 //     ESI_CLIENT_ID - String
-//     SERVICE_ADDRESS - Address:Port
 //     GCSTORAGE_CREDS - Json
 //     GCSTORAGE_BUCKET - String
-//     FIRESTORE_COLLECTION_PATH - '/' Separated Path
+//     FIRESTORE_COLLECTION_PATH - '/' Separated Path (odd)
+//     FIRESTORE_CREDS - Json
 //     FIRESTORE_PROJECT_ID - String
 //     SQLITE_URL - String
 //
 // Optional ENV Variables:
+//     FIRESTORE_SCOPES - ',' Separated List of Scopes
+//     FIRESTORE_MAX_RETRIES - Integer
 //     GCSTORAGE_JSON_ACL - String
 //     GCSTORAGE_ITEM_ACL - String
-//     FIRESTORE_MAX_RETRIES - Integer
-//     FIRESTORE_SCOPES - ',' Separated List of Scopes
-//     FIRESTORE_CREDS - Json
 //     SQLITE_MAX_CONNECTIONS - Integer
 //     SQLITE_MAX_CONNECTIONS - Integer
 //     SQLITE_MIN_CONNECTIONS - Integer

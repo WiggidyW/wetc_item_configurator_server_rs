@@ -1,0 +1,61 @@
+﻿steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-t'
+  - 'gcr.io/$PROJECT_ID/wetc-item-configurator-server-rs:latest'
+  - '-f'
+  - 'Dockerfile'
+  - '.'
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/wetc-item-configurator-server-rs:latest'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    echo "ESI_CLIENT_ID: '${_ESI_CLIENT_ID}'" >> env.yaml
+    echo "GCSTORAGE_CREDS: '${_GCSTORAGE_CREDS}'" >> env.yaml
+    echo "GCSTORAGE_BUCKET: '${_GCSTORAGE_BUCKET}'" >> env.yaml
+    echo "FIRESTORE_COLLECTION_PATH: '${_FIRESTORE_COLLECTION_PATH}'" >> env.yaml
+    echo "FIRESTORE_CREDS: '${_FIRESTORE_CREDS}'" >> env.yaml
+    echo "FIRESTORE_PROJECT_ID: '${_FIRESTORE_PROJECT_ID}'" >> env.yaml
+    echo "SQLITE_URL: '${_SQLITE_URL}'" >> env.yaml
+    if [ ! -z "${_FIRESTORE_SCOPES}" ]; then
+      echo "FIRESTORE_SCOPES: '${_FIRESTORE_SCOPES}'" >> env.yaml
+    fi
+    if [ ! -z "${_FIRESTORE_MAX_RETRIES}" ]; then
+      echo "FIRESTORE_MAX_RETRIES: '${_FIRESTORE_MAX_RETRIES}'" >> env.yaml
+    fi
+    if [ ! -z "${_GCSTORAGE_JSON_ACL}" ]; then
+      echo "GCSTORAGE_JSON_ACL: '${_GCSTORAGE_JSON_ACL}'" >> env.yaml
+    fi
+    if [ ! -z "${_GCSTORAGE_ITEM_ACL}" ]; then
+      echo "GCSTORAGE_ITEM_ACL: '${_GCSTORAGE_ITEM_ACL}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_MAX_CONNECTIONS}" ]; then
+      echo "SQLITE_MAX_CONNECTIONS: '${_SQLITE_MAX_CONNECTIONS}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_MIN_CONNECTIONS}" ]; then
+      echo "SQLITE_MIN_CONNECTIONS: '${_SQLITE_MIN_CONNECTIONS}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_ACQUIRE_TIMEOUT}" ]; then
+      echo "SQLITE_ACQUIRE_TIMEOUT: '${_SQLITE_ACQUIRE_TIMEOUT}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_MAX_LIFETIME}" ]; then
+      echo "SQLITE_MAX_LIFETIME: '${_SQLITE_MAX_LIFETIME}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_IDLE_TIMEOUT}" ]; then
+      echo "SQLITE_IDLE_TIMEOUT: '${_SQLITE_IDLE_TIMEOUT}'" >> env.yaml
+    fi
+    if [ ! -z "${_SQLITE_TEST_BEFORE_ACQUIRE}" ]; then
+      echo "SQLITE_TEST_BEFORE_ACQUIRE: '${_SQLITE_TEST_BEFORE_ACQUIRE}'" >> env.yaml
+    fi
+    gcloud run deploy wetc-item-configurator-server-rs \
+      --image gcr.io/$PROJECT_ID/wetc-item-configurator-server-rs:latest \
+      --region us-central1 \
+      --port 9090 \
+      --env-vars-file env.yaml
+images: ['gcr.io/$PROJECT_ID/wetc-item-configurator-server-rs:latest']
